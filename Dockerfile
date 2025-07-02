@@ -41,6 +41,5 @@ RUN	yay -Syu --noconfirm sudo yq which unzip \
 	&& pacman -Syu --noconfirm aws-cli \
 	&& rm -rf /var/cache/pacman/pkg/* /tmp/*
 
-RUN	&& sh -c "echo $(which zsh) >> /etc/shells" \
-	&& chsh -s $(which zsh) \
-	&& sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUN	sh -c "echo $(which zsh) >> /etc/shells" \
+	&& chsh -s $(which zsh)
