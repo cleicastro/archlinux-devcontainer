@@ -1,4 +1,6 @@
-FROM	archlinux:base-devel AS builder
+FROM archlinux:latest AS builder
+
+RUN pacman -Syu --noconfirm base-devel
 
 RUN	pacman -Syu --noconfirm git \
 	&& mkdir -p /tmp/yay \
@@ -13,7 +15,7 @@ RUN	git clone https://aur.archlinux.org/yay.git /tmp/yay \
 	&& makepkg -si --noconfirm \
 	&& which yay
 
-FROM	archlinux:latest
+FROM archlinux:latest
 
 ARG	REPO_OWNER
 ARG	REPO_NAME
@@ -33,12 +35,13 @@ LABEL org.opencontainers.image.revision="${GIT_COMMIT_SHA}"
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
 
-COPY	--from=builder /usr/sbin/yay /usr/sbin/yay
+COPY --from=builder /usr/sbin/yay /usr/sbin/yay
 
 RUN	yay -Syu --noconfirm sudo yq which unzip \
 	&& curl -s https://raw.githubusercontent.com/cleicastro/dotfiles/main/vars/main.yml | yq '.yay_packages[]' | xargs yay -S --noconfirm \
 	&& pacman -Sc --noconfirm \
 	&& pacman -Syu --noconfirm aws-cli \
+	&& pacman -Syu --noconfirm openssh \
 	&& rm -rf /var/cache/pacman/pkg/* /tmp/*
 
 RUN	sh -c "echo $(which zsh) >> /etc/shells" \
