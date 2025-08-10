@@ -8,7 +8,7 @@ RUN	pacman -Syu --noconfirm git \
 	&& chown -R builder:builder /tmp/yay \
 	&& echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-USER	builder
+USER builder
 
 RUN	git clone https://aur.archlinux.org/yay.git /tmp/yay \
 	&& cd /tmp/yay \
@@ -34,7 +34,6 @@ LABEL org.opencontainers.image.version="${VERSION}"
 LABEL org.opencontainers.image.revision="${GIT_COMMIT_SHA}"
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
-
 COPY --from=builder /usr/sbin/yay /usr/sbin/yay
 
 RUN	yay -Syu --noconfirm sudo yq which unzip \
@@ -47,7 +46,3 @@ RUN	yay -Syu --noconfirm sudo yq which unzip \
 RUN	sh -c "echo $(which zsh) >> /etc/shells" \
 	&& chsh -s $(which zsh)
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
-    ZSH_CUSTOM="${HOME}/.oh-my-zsh/custom" && \
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git "${ZSH_CUSTOM}/plugins/zsh-autosuggestions" && \
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
