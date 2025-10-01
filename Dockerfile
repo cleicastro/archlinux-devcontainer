@@ -36,7 +36,7 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
 COPY --from=builder /usr/sbin/yay /usr/sbin/yay
 
-RUN	yay -Syu --noconfirm sudo yq which unzip \
+RUN	yay -Syu --noconfirm sudo yq which unzip zip \
 	&& curl -s https://raw.githubusercontent.com/cleicastro/dotfiles/main/vars/main.yml | yq '.yay_packages[]' | xargs yay -S --noconfirm \
 	&& pacman -Sc --noconfirm \
 	&& pacman -Syu --noconfirm aws-cli \
